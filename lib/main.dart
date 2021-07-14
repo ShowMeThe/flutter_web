@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'bing',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -90,6 +90,19 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
               ),
+              Padding(
+                padding: const EdgeInsets.only(right: 45.0),
+                child: GestureDetector(
+                  onTap: () {
+                    js.context
+                        .callMethod("open", ["https://github.com/ShowMeThe"]);
+                  },
+                  child: const Text(
+                    "开发者",
+                    style: TextStyle(color: Colors.cyan, fontSize: 15),
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -108,16 +121,32 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.zero,
               itemCount: _list.length,
               controller: _controller,
-              itemBuilder: (context, index) => GestureDetector(
-                  onTap: (){
-                    js.context.callMethod(
-                        "open", [_list[index].photoUrl]);
-                  },
-                  child: FadeImage.network(_list[index].photoUrl)),
+              itemBuilder: (context, index) => _createItem(_list[index]),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: count, childAspectRatio: 2));
+                  crossAxisCount: count, childAspectRatio: 1.78));
         }))
       ],
+    );
+  }
+
+  Widget _createItem(BingEntity entity) {
+    return GestureDetector(
+      onTap: () {
+        js.context.callMethod("open", [entity.photoUrl]);
+      },
+      child: Stack(children: [
+        FadeImage.network(entity.photoUrl),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            entity.copyRight,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
+          ),
+        )
+      ]),
     );
   }
 }

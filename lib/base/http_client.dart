@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 
 class HttpClient {
 
-  static const _baseUrl = "http://127.0.0.1:8080/";
+  static const _baseUrl = "http://45.77.205.115:8081/";
   static const _timeOut = 15000;
   static Dio? _dio;
   static final Map<String, dynamic> _map = HashMap();
