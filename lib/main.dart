@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web/base/Px.dart';
 import 'package:flutter_web/entity/bing_entity.dart';
 import 'package:flutter_web/generated/json/base/json_convert_content.dart';
-import 'package:flutter_web/widget/fade_image.dart';
+import 'package:flutter_web/widget/load_refresh_indicator.dart';
 import 'dart:js' as js;
 import 'base/http_client.dart';
 
 void main() {
-  runApp(const ProviderScope(child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
 
   final _list = <BingEntity>[];
   final _controller = ScrollController();
-  final _page = 0;
+  var _page = 0;
 
   void getPage({int page = 0}) async {
     var response = await HttpClient.get().get('/image/new/${page}');
@@ -117,13 +117,19 @@ class _HomePageState extends State<HomePage> {
           } else if (_width <= 640) {
             count = 1;
           }
-          return GridView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: _list.length,
-              controller: _controller,
-              itemBuilder: (context, index) => _createItem(_list[index]),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: count, childAspectRatio: 1.78));
+          return LoadRefreshIndicator(
+            onEndOfPage: (){
+              _page++;
+              getPage(page: _page);
+            },
+            child: GridView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: _list.length,
+                controller: _controller,
+                itemBuilder: (context, index) => _createItem(_list[index]),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: count, childAspectRatio: 1.78)),
+          );
         }))
       ],
     );
@@ -135,7 +141,7 @@ class _HomePageState extends State<HomePage> {
         js.context.callMethod("open", [entity.photoUrl]);
       },
       child: Stack(children: [
-        FadeImage.network(entity.photoUrl),
+        Image.network(entity.photoUrl),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(

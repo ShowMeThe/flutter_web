@@ -5,17 +5,14 @@ typedef RefreshCallback = Future<void> Function();
 class LoadRefreshIndicator extends StatefulWidget {
   final VoidCallback? onEndOfPage;
   final bool isLoading;
-  final RefreshCallback? onRefresh;
   final Widget? child;
 
   const LoadRefreshIndicator({
     Key? key,
     @required this.onEndOfPage,
     this.isLoading = false,
-    @required this.onRefresh,
     @required this.child,
   })  : assert(child != null),
-        assert(onRefresh != null),
         assert(onEndOfPage != null),
         super(key: key);
 
@@ -41,11 +38,7 @@ class _LoadRefreshIndicatorState extends State<LoadRefreshIndicator> {
   @override
   Widget build(BuildContext context) {
     return NotificationListener<ScrollNotification>(
-      child: RefreshIndicator(
-
-        child: widget.child!,
-        onRefresh: widget.onRefresh!,
-      ),
+      child: widget.child!,
       onNotification: _handleLoadMoreScroll,
     );
   }

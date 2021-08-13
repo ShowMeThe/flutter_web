@@ -36,7 +36,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_riverpod: ^0.14.0+1
   dio: ^4.0.0
-  palette_generator: ^0.3.0
 
 dev_dependencies:
   flutter_test:
